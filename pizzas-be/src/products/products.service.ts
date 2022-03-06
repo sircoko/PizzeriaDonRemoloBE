@@ -3,23 +3,27 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { Product } from './product.entity';
+import { CategoryDto } from '../categories/dtos/category.dto';
+import { Category } from '../categories/category.entity';
 
 @Injectable()
 export class ProductsService {
   constructor( @InjectRepository(Product) private productRepository: Repository<Product>){}
 
-  create(body: CreateProductDto) {
+  create(body: CreateProductDto, category: Category) {
     const product = this.productRepository.create(body);
+    product.category = category;
     return this.productRepository.save(product);
   }
 
-  async findOne(id: number) {
-    const product = await this.productRepository.findOne(id);
+  findOne(id: number) {
+    const product = this.productRepository.findOne(id);
     return product;
   }
 
-  find(){
-    const products = this.productRepository.find();
+  async find(){
+    const products = await this.productRepository.find();
+    console.log(products)
     return products;
   }
 

@@ -9,8 +9,9 @@ export class CategoriesService {
   constructor( @InjectRepository(Category) private categoryRepository: Repository<Category>){}
 
   create(body: CreateCategoryDto) {
-    console.log(body);
+    console.log('body', body);
     const category = this.categoryRepository.create(body);
+    console.log('category', category);
     return this.categoryRepository.save(category);
   }
 

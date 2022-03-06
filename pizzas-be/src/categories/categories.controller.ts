@@ -2,6 +2,8 @@ import { Controller, Get, Param, NotFoundException, Post, Body, Patch, Delete } 
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { UpdateCategoryDto } from './dtos/update-category.dto';
+import { Serialize } from 'src/interceptors/serialize.interceptors';
+import { CategoryDto } from './dtos/category.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -12,10 +14,12 @@ export class CategoriesController {
     return this.categoriesSrv.find();
   }
 
+  @Serialize(CategoryDto)
   @Get('/:id')
   findCategory(@Param('id') id: string){
     const category = this.categoriesSrv.findOne(parseInt(id));
     if(!category) {
+      console.log('Category not found')
       throw new NotFoundException('Category not found');
     }
     return category;

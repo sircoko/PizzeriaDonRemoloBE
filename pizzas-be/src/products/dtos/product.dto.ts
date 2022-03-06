@@ -1,4 +1,5 @@
-import { Expose } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
+import { Category } from '../../categories/category.entity';
 
 export class ProductDto {
   @Expose()
@@ -16,6 +17,7 @@ export class ProductDto {
   @Expose()
   price: number;
 
+  @Transform( ( { obj } ) => obj.category.id)
   @Expose()
-  categoryId: number;
+  categoryId: Category;
 }
