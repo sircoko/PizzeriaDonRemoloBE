@@ -15,8 +15,9 @@ export class CategoriesService {
     return this.categoryRepository.save(category);
   }
 
-  findOne(id: number) {
-    const category = this.categoryRepository.findOne(id);
+  async findOne(id: number) {
+    const category = await this.categoryRepository.findOne(id, {relations: ["products"]});
+    console.log(category)
     return category;
   }
 

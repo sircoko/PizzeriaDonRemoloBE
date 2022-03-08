@@ -16,12 +16,13 @@ export class CategoriesController {
 
   @Serialize(CategoryDto)
   @Get('/:id')
-  findCategory(@Param('id') id: string){
-    const category = this.categoriesSrv.findOne(parseInt(id));
+  async findCategory(@Param('id') id: string){
+    const category = await this.categoriesSrv.findOne(parseInt(id));
     if(!category) {
       console.log('Category not found')
       throw new NotFoundException('Category not found');
     }
+    console.log('Category Controller', category)
     return category;
   }
 

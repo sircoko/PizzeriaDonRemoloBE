@@ -9,6 +9,6 @@ async function bootstrap() {
       whitelist: true, //Only gets DTOs params and discard anything else sent on request
     })
   );
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
