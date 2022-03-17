@@ -1,18 +1,17 @@
 import { Body, Controller, Post, NotFoundException, Get, Param, Patch, Delete } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
+import { AuthService } from './auth.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersSrv: UsersService){}
+  constructor(private usersSrv: UsersService,
+              private authSrv: AuthService){}
 
   @Post()
   async signupUser(@Body() body: CreateUserDto){
-    const user = await this.usersSrv.findOneByEmail(body.email);
-    if (!user){
-      throw new NotFoundException('User not fount');
-    }
+    const user = await this.authSrv.signup(body);
     return user;
   }
 
