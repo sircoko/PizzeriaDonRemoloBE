@@ -18,8 +18,10 @@ export class UsersService {
     return user
   }
 
-  findOneByEmail(email: string){
-    const user = this.userRepository.findOne(email);
+  async findOneByEmail(email: string){
+    console.log('FindOneByEmail: ', email)
+    const user = await this.userRepository.findOne({email});
+    console.log('FoundByEmail: ', user)
     return user;
   }
 

@@ -1,8 +1,9 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { UsersService } from './users.service';
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { promisify } from "util";
+import { CredentialUserDto } from "./dtos/credentials-user.dto";
 
 const scrypt = promisify(_scrypt);
 
@@ -14,7 +15,9 @@ export class AuthService {
 
   async signup(body: CreateUserDto){
     //Check unique email
-    const existsUser = this.usersSrv.findOneByEmail(body.email);
+    
+    const existsUser = await this.usersSrv.findOneByEmail(body.email);
+    console.log('ExistsUser with email: ' + body.email, existsUser)
     if(existsUser) {
       throw new BadRequestException('Email is already used')
     }
@@ -37,7 +40,22 @@ export class AuthService {
 
   }
 
-  signin(){
+  async signin(credentials: CredentialUserDto){
+    const user = await this.usersSrv.findOneByEmail(credentials.email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const [salt, storedHash] = user.password.split('.');
+
+    const hash = (await scrypt(credentials.password, salt, 32)) as Buffer;
+
+    if (storedHash !== hash.toString('hex')) {
+      throw new BadRequestException('Bad password');
+    }
+    
+    return user;
+
 
   }
 }

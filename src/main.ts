@@ -1,10 +1,9 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { config } from 'dotenv';
-config();
 
-console.log('params', process.env.DB_PORT, process.env.DB_HOST,process.env.DB_USER,process.env.DB_PASS)
+
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(

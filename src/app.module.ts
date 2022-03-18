@@ -8,7 +8,10 @@ import { Category } from './categories/category.entity';
 import { Product } from './products/product.entity';
 import { UsersModule } from './users/users.module';
 import { User } from './users/user.entity';
+import { config } from 'dotenv';
+config();
 
+console.log('params', process.env.DB_PORT, process.env.DB_HOST,process.env.DB_USER,process.env.DB_PASS)
 @Module({
   imports: [
     TypeOrmModule.forRoot({

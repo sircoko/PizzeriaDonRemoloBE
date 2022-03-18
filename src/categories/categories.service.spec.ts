@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CategoriesService } from './categories.service';
 import { Category } from './category.entity';
+import { CategoryDto } from './dtos/category.dto';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 
 
@@ -53,6 +54,14 @@ describe('CategoriesService', () => {
     expect( await categoriesSrv.create(createCategoryDto)).toEqual({
       id: expect.any(Number),
       ...createCategoryDto,
+    })
+  });
+
+  it('Should FineOne Category', async() => {
+    const id = 1;
+    expect ( await categoriesSrv.findOne(id)).toEqual({
+      id: id,
+      ...CategoryDto,
     })
   });
 
