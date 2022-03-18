@@ -1,4 +1,4 @@
-import { Body, Controller, Post, NotFoundException, Get, Param, Patch, Delete } from '@nestjs/common';
+import { Body, Controller, Post, NotFoundException, Get, Param, Patch, Delete, Session } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { AuthService } from './auth.service';
@@ -13,16 +13,32 @@ export class UsersController {
               private authSrv: AuthService){}
 
   @Serialize(UserDto)
+  @Get('/whoami')
+  whoAmI(@Session() session: any) {
+    console.log(session)
+    return this.usersSrv.findOne(session.userId)
+  }
+
+  @Serialize(UserDto)
   @Post()
-  async signupUser(@Body() body: CreateUserDto){
+  async signupUser(@Body() body: CreateUserDto, @Session() session: any){
     const user = await this.authSrv.signup(body);
+    session.userId = user.id;
     return user;
   }
 
   @Serialize(UserDto)
   @Post('/login')
-  login(@Body() credentials: CredentialUserDto) {
-    return this.authSrv.signin(credentials);
+  async login(@Body() credentials: CredentialUserDto, @Session() session: any) {
+    const user = await this.authSrv.signin(credentials);
+    session.userId = user.id;
+    return user; 
+  }
+
+  @Post('/logout')
+  signout(@Session() session: any){
+    session = null;
+    console.log(session)
   }
 
 

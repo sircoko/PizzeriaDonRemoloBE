@@ -13,8 +13,9 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  findOne(id: number) {
-    const user = this.userRepository.findOne(id);
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({id});
+    console.log('Found user with id: ' + id, user)
     return user
   }
 
